@@ -1,0 +1,8 @@
+{
+  "name": "phials-plugins-registry",
+  "private": true,
+  "description": "Community plugin index for Phials (community-plugins.json)",
+  "scripts": {
+    "validate": "node scripts/validate-community-index.mjs"
+  }
+}

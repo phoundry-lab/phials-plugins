@@ -1,12 +1,12 @@
 {
+  "$schema": "./community-plugins.schema.json",
   "plugins": [
     {
-      "id": "phials.pdf",
-      "name": "PDF Preview",
-      "author": "Phials",
-      "description": "Preview and thumbnail support for PDF files using pdf.js",
-      "repo": "EliWimmer/phials-plugin-pdf"
+      "id": "example.community-demo",
+      "name": "Community plugin example",
+      "author": "Phoundry",
+      "description": "Official reference plugin (command + preview). Build from phials-plugin-example and match releases to this id.",
+      "repo": "phoundry/phials-plugin-example"
     }
   ]
 }
-

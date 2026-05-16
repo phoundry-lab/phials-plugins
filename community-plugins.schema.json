@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/EliWimmer/phials-plugins/community-plugins.schema.json",
+  "title": "Phials community plugins index",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "plugins": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/pluginEntry" }
+    }
+  },
+  "required": ["plugins"],
+  "$defs": {
+    "pluginEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "author", "description", "repo"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*\\.[a-z][a-z0-9-]*[a-z0-9]$",
+          "not": { "pattern": "^phials\\." },
+          "description": "Must match plugin manifest id; cannot use reserved phials.* prefix"
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "author": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "repo": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*/[a-zA-Z0-9][a-zA-Z0-9_.-]*$",
+          "description": "GitHub owner/repo (no https://)"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+name: Validate community index
+
+on:
+  pull_request:
+    paths:
+      - "community-plugins.json"
+      - "scripts/validate-community-index.mjs"
+  push:
+    branches: [master]
+    paths:
+      - "community-plugins.json"
+      - "scripts/validate-community-index.mjs"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate community-plugins.json
+        run: npm run validate

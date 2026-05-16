@@ -1,114 +1,60 @@
-# Phials Community Plugins
+# Phials community plugins registry
 
-This repository is the central registry for community plugins for [Phials](https://github.com/phials-dev/phials).
+Canonical **`community-plugins.json`** for [Phials](https://github.com/phoundry/phials) lives on the default branch of this repo. The app fetches:
 
-## For Users
+`https://raw.githubusercontent.com/EliWimmer/phials-plugins/master/community-plugins.json`
 
-Browse and install community plugins directly from within Phials:
+**Maintainers:** Phoundry coordinates the index; this repository is the source of truth for which community plugins appear in the in-app browser.
 
-1. Open Phials
-2. Go to **Settings** → **Plugins**
-3. Switch to the **Community** tab
-4. Browse or search for plugins
-5. Click **Install** to add a plugin
+## For users
 
-## For Plugin Developers
+1. Open Phials  
+2. **Settings → Plugins → Community plugins**  
+3. Turn **safe mode** off and accept the warning (safe mode is on by default)  
+4. Browse the list and **Install** a plugin  
 
-### Creating a Plugin
+Community plugins are **trusted JavaScript** running in the app with **permission-gated** Phials APIs—not a full sandbox. See Phials [user plugins documentation](https://github.com/phoundry/phials/blob/main/documentation/user/plugins.md).
 
-1. Create a new repository for your plugin
-2. Structure your plugin with the following files:
-   - `manifest.json` - Plugin metadata
-   - `main.js` - Bundled plugin code (ES module)
-   - `styles.css` (optional) - Custom styles
+## For plugin authors
 
-### manifest.json Schema
+Authoring starts from the public example repo: **[phoundry/phials-plugin-example](https://github.com/phoundry/phials-plugin-example)** (Svelte 5, Vite, synced SDK types, `npm run validate` on `dist/`).
 
-```json
-{
-  "id": "your-username.plugin-name",
-  "name": "Your Plugin Name",
-  "version": "1.0.0",
-  "minAppVersion": "0.1.0",
-  "author": "Your Name",
-  "description": "A brief description of your plugin",
-  "authorUrl": "https://github.com/your-username",
-  "repository": "https://github.com/your-username/phials-plugin-name",
-  "icons": ["mdi:icon-name"],
-  "permissions": ["filesystem.read"]
-}
+### Artifact layout
+
+Each **GitHub Release** should ship:
+
+| File | Required |
+|------|----------|
+| `manifest.json` | Yes |
+| `main.js` | Yes |
+| `styles.css` | Optional |
+
+Prefer attaching these as **release assets** with exact filenames. The loader can fall back to raw files at the release tag when assets are missing.
+
+### manifest.json (summary)
+
+Required: `id`, `name`, `version`, `minAppVersion`, `author`, `description`.  
+Optional: `pluginApiVersion`, `authorUrl`, `repository`, `icons`, `permissions`.
+
+**Plugin id:** `vendor.plugin-name` (lowercase). Do **not** use the reserved `phials.*` prefix for community plugins.
+
+**Permissions (v1):** `filesystem.read`, `filesystem.write`, `clipboard.read`, `clipboard.write`, `network.fetch`. There is no `shell.execute` permission in v1.
+
+Full rules and compatibility semantics: [Public API contract](https://github.com/phoundry/phials/blob/main/documentation/developer/plugins/public-api-contract.md) · [Community plugins](https://github.com/phoundry/phials/blob/main/documentation/developer/plugins/external-plugins.md) · [Getting started](https://github.com/phoundry/phials/blob/main/documentation/developer/plugins/getting-started.md).
+
+### Listing your plugin here
+
+See **[SUBMISSION.md](SUBMISSION.md)** for the maintainer checklist. Governance and takedowns: **[POLICY.md](POLICY.md)**.
+
+Validate before opening a PR:
+
+```bash
+npm run validate
 ```
 
-#### Required Fields
+### JSON Schema
 
-| Field | Description |
-|-------|-------------|
-| `id` | Unique identifier in format `vendor.plugin-name` (lowercase, alphanumeric with hyphens) |
-| `name` | Human-readable display name |
-| `version` | Semver version string (e.g., "1.0.0") |
-| `minAppVersion` | Minimum Phials version required |
-| `author` | Plugin author name |
-| `description` | Brief description (shown in plugin browser) |
-
-#### Optional Fields
-
-| Field | Description |
-|-------|-------------|
-| `authorUrl` | Link to author's website or profile |
-| `repository` | GitHub repository URL |
-| `icons` | Array of Iconify icon names to preload |
-| `permissions` | Array of required permissions |
-
-### Available Permissions
-
-| Permission | Description | Risk Level |
-|------------|-------------|------------|
-| `filesystem.read` | Read files from the filesystem | Low |
-| `filesystem.write` | Write and delete files | High |
-| `clipboard.read` | Read clipboard content | Medium |
-| `clipboard.write` | Write to clipboard | Low |
-| `shell.execute` | Execute shell commands | High |
-| `network.fetch` | Make network requests | Medium |
-
-### Creating a Release
-
-1. Build your plugin to produce `main.js`
-2. Create a GitHub Release with the following assets:
-   - `manifest.json`
-   - `main.js`
-   - `styles.css` (if applicable)
-3. Tag the release with a version number (e.g., `v1.0.0` or `1.0.0`)
-
-### Submitting to the Community Registry
-
-1. Fork this repository
-2. Add your plugin to `community-plugins.json`:
-
-```json
-{
-  "id": "your-username.plugin-name",
-  "name": "Your Plugin Name",
-  "author": "Your Name",
-  "description": "A brief description",
-  "repo": "your-username/phials-plugin-name"
-}
-```
-
-3. Submit a Pull Request
-4. Wait for review and approval
-
-### Guidelines
-
-- **Security**: Only request permissions your plugin actually needs
-- **Quality**: Test your plugin thoroughly before submitting
-- **Documentation**: Include a README in your plugin repository
-- **Updates**: Create new GitHub Releases for updates
-
-## Plugin Development Resources
-
-- [Plugin Template](https://github.com/phials-dev/phials-plugin-template) - Starter template with build configuration
-- [PDF Plugin Example](https://github.com/phials-dev/phials-plugin-pdf) - Reference implementation
-- [Plugin API Documentation](https://github.com/phials-dev/phials/blob/main/docs/plugin-api.md)
+[`community-plugins.schema.json`](community-plugins.schema.json) describes the index shape (optional `$schema` in `community-plugins.json` points at this file for editors).
 
 ## License
 
