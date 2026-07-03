@@ -7,6 +7,13 @@
       "author": "Phoundry",
       "description": "Official reference plugin (command + preview). Build from phials-plugin-example and match releases to this id.",
       "repo": "phoundry/phials-plugin-example"
+    },
+    {
+      "id": "phoundry.taskmanager",
+      "name": "Task Manager",
+      "author": "Phoundry",
+      "description": "Task lists with priorities and due dates. Module plugin using the plugin database API.",
+      "repo": "phoundry/phials-plugin-taskmanager"
     }
   ]
 }
