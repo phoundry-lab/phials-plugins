@@ -5,13 +5,13 @@ The community registry is a **static JSON index** on GitHub. There is no separat
 ## Malicious or abusive plugins
 
 - **Report:** Open a private security report to registry maintainers or Phials maintainers with evidence (repo, release, behavior).
-- **Action:** Remove the entry from `community-plugins.json` as soon as abuse is confirmed. Optionally open a public advisory in the plugin repo.
+- **Action:** Run `npm run registry:unlist -- <plugin-id>` as soon as abuse is confirmed. This preserves the reviewed identity with `listed: false` and removes the release record. Optionally open a public advisory in the plugin repo.
 - **Users:** Removing an entry stops **new installs** from the in-app browser for that id. Already-installed copies remain on disk until the user uninstalls. Users should disable community plugins or re-enable **safe mode** if they are unsure (see Phials user documentation).
 
 ## Broken or incompatible releases
 
 - If the **latest** GitHub Release is broken (missing files, bad manifest, wrong semver), fix the release or publish a newer good release. Phials resolves **latest** by GitHub’s API.
-- If the plugin cannot be fixed quickly, maintainers may **remove** the index entry temporarily and restore it when a good release exists.
+- If the plugin cannot be fixed quickly, maintainers set `listed: false` and remove its `release` record. Phials omits that entry from new-install discovery. Restoration removes `listed` (or sets it to `true`) and adds a newly verified immutable release record.
 
 ## Ownership transfer
 
@@ -20,8 +20,9 @@ The community registry is a **static JSON index** on GitHub. There is no separat
 
 ## Deprecation and unlisting
 
-- **Deprecation:** Prefer shipping a final release and updating the description field to “deprecated — use X”. Remove from the index when appropriate.
-- **Unlisting:** Delete the entry from `community-plugins.json`. Optionally archive the plugin repository.
+- **Deprecation/replacement:** The registry does not carry deprecation or replacement metadata until Phials has a consuming product surface. Communicate it in the plugin repository and release notes.
+- **Unlisting:** Set `listed: false` and omit `release`. This stops new installs and update discovery only; it does not remotely disable, remove, or alter already-installed copies. Restore the same reviewed record after a valid release is available.
+- **Commands:** Use `npm run registry:unlist -- <plugin-id>` and restore from a newly verified starter inventory with `npm run registry:restore -- <plugin-id> --inventory <path> --tag <tag>`.
 
 ## Scope
 

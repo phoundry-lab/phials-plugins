@@ -11,7 +11,7 @@ This checklist is what maintainers verify before merging a pull request that add
 
 ## 2. Index entry fields
 
-Each entry must contain **only** these keys (extras are rejected by the app and CI):
+Each entry must contain only the reviewed identity fields plus the machine-verified release record:
 
 | Field | Requirement |
 |--------|----------------|
@@ -20,17 +20,19 @@ Each entry must contain **only** these keys (extras are rejected by the app and 
 | `author` | Maintainer or team name. |
 | `description` | One or two sentences for the in-app browser. |
 | `repo` | `owner/repo` only (no `https://`, no leading slash). Must match the repo used for **GitHub Releases**. |
+| `listed` | Optional. Set to `false` only for temporary machine-supported unlisting; omit to restore after a verified release exists. |
+| `release` | Required while listed. Exact stable tag/version, candidate SHA-256, and the complete canonical asset name/size/SHA-256 inventory produced by the starter. Omit while unlisted. |
 
 ## 3. GitHub release and artifacts
 
-- **Releases:** Distribution uses **GitHub Releases** (latest release) plus optional raw fallback at the release tag.
+- **Releases:** Distribution uses the latest stable **GitHub Release**. Raw repository files are not an install fallback.
 - **Required files:** Each release must provide **`manifest.json`** and **`main.js`**. Optional **`styles.css`** if your plugin ships styles.
-- **Prefer release assets** named exactly `manifest.json`, `main.js`, and `styles.css` so installs are reliable.
+- Attach exactly the names recorded by `npm run release:inventory`; unresolved chunks and unrecorded files are rejected.
 - **Tag format:** Version tags are normalized (with or without leading `v`); ensure `manifest.json` **`version`** matches the release you intend users to install.
 
 ## 4. Manifest compatibility
 
-- **`minAppVersion`** and optional **`pluginApiVersion`** must be satisfied by current Phials builds you target (see [public API contract](https://github.com/phoundry/phials/blob/main/documentation/developer/plugins/public-api-contract.md) in the Phials repo, or synced SDK in [phials-plugin-example](https://github.com/phoundry/phials-plugin-example)).
+- **`minAppVersion`** and **`pluginApiVersion`** must be satisfied by current Phials builds you target (see the canonical [version and compatibility reference](https://github.com/phoundry/phials/blob/main/documentation/developer/reference/plugin-contract-and-compatibility/version-and-compatibility-reference.md), or the synchronized SDK in [phials-plugin-example](https://github.com/phoundry/phials-plugin-example)).
 - **Permissions:** Request only what you need. **`shell.execute`** is not supported in v1. Allowed permissions are documented in Phials developer docs under community plugins.
 
 ## 5. Review (v1 trust model)
@@ -42,7 +44,16 @@ Each entry must contain **only** these keys (extras are rejected by the app and 
 
 1. Fork this repository (or open a branch if you are a maintainer).
 2. Add or update your entry in `community-plugins.json`.
-3. Run locally: `npm run validate`.
+3. Run locally: `npm run validate && npm run test:run && npm run validate:remote`.
 4. Open a PR with a link to your plugin repo and release tag you want listed.
 
 If the registry index is invalid, Phials will refuse to load the community list until it is fixed—run validation before pushing.
+
+Maintainers temporarily unlist and restore reviewed records with:
+
+```bash
+npm run registry:unlist -- vendor.plugin-name
+npm run registry:restore -- vendor.plugin-name \
+  --inventory /absolute/path/to/release/release-inventory.json \
+  --tag v1.2.3
+```

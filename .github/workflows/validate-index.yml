@@ -4,12 +4,22 @@ on:
   pull_request:
     paths:
       - "community-plugins.json"
+      - "community-plugins.schema.json"
       - "scripts/validate-community-index.mjs"
+      - "scripts/validate-community-index.test.mjs"
+      - "scripts/listing-state.mjs"
+      - "SUBMISSION.md"
+      - "POLICY.md"
   push:
     branches: [master]
     paths:
       - "community-plugins.json"
+      - "community-plugins.schema.json"
       - "scripts/validate-community-index.mjs"
+      - "scripts/validate-community-index.test.mjs"
+      - "scripts/listing-state.mjs"
+      - "SUBMISSION.md"
+      - "POLICY.md"
 
 jobs:
   validate:
@@ -17,4 +27,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Validate community-plugins.json
-        run: npm run validate
+        run: npm run validate && npm run test:run && npm run validate:remote

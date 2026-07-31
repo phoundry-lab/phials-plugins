@@ -17,6 +17,24 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["id", "name", "author", "description", "repo"],
+      "allOf": [
+        {
+          "if": {
+            "not": {
+              "properties": { "listed": { "const": false } },
+              "required": ["listed"]
+            }
+          },
+          "then": { "required": ["release"] }
+        },
+        {
+          "if": {
+            "properties": { "listed": { "const": false } },
+            "required": ["listed"]
+          },
+          "then": { "not": { "required": ["release"] } }
+        }
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -31,7 +49,43 @@
           "type": "string",
           "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*/[a-zA-Z0-9][a-zA-Z0-9_.-]*$",
           "description": "GitHub owner/repo (no https://)"
+        },
+        "listed": {
+          "type": "boolean",
+          "description": "False keeps the record machine-restorable while hiding it from Phials"
+        },
+        "release": { "$ref": "#/$defs/release" }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tag", "version", "candidateSha256", "assets"],
+      "properties": {
+        "tag": { "type": "string", "minLength": 1 },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+        },
+        "candidateSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "assets": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/releaseAsset" }
         }
+      }
+    },
+    "releaseAsset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "size", "sha256"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "size": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
       }
     }
   }

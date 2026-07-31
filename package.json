@@ -3,6 +3,10 @@
   "private": true,
   "description": "Community plugin index for Phials (community-plugins.json)",
   "scripts": {
-    "validate": "node scripts/validate-community-index.mjs"
+    "validate": "node scripts/validate-community-index.mjs",
+    "validate:remote": "node scripts/validate-community-index.mjs --remote",
+    "test:run": "node --test scripts/*.test.mjs",
+    "registry:unlist": "node scripts/listing-state.mjs unlist",
+    "registry:restore": "node scripts/listing-state.mjs restore"
   }
 }
