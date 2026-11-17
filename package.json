@@ -1,10 +1,13 @@
 {
   "name": "phials-plugins-registry",
   "private": true,
-  "description": "Community plugin index for Phials (community-plugins.json)",
+  "description": "Community plugin and standalone theme indexes for Phials",
   "scripts": {
-    "validate": "node scripts/validate-community-index.mjs",
-    "validate:remote": "node scripts/validate-community-index.mjs --remote",
+    "validate": "node scripts/validate-community-index.mjs && npm run validate:themes",
+    "validate:themes": "node scripts/validate-community-themes.mjs",
+    "validate:remote": "node scripts/validate-community-index.mjs --remote && npm run validate:themes:remote",
+    "validate:themes:remote": "node scripts/validate-community-themes.mjs --remote",
+    "test": "npm run test:run",
     "test:run": "node --test scripts/*.test.mjs",
     "registry:unlist": "node scripts/listing-state.mjs unlist",
     "registry:restore": "node scripts/listing-state.mjs restore"

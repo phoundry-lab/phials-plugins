@@ -1,4 +1,4 @@
-# Phials community plugins registry
+# Phials community plugins and themes registry
 
 Canonical **`community-plugins.json`** for [Phials](https://github.com/phoundry/phials) lives on the default branch of this repo. The app fetches:
 
@@ -6,7 +6,18 @@ Canonical **`community-plugins.json`** for [Phials](https://github.com/phoundry/
 
 **Maintainers:** Phoundry coordinates the index; this repository is the source of truth for which community plugins appear in the in-app browser.
 
-## For users
+## Standalone themes
+
+**[`community-themes.json`](community-themes.json)** distributes declarative themes independently of executable Plugins. Each reviewed release ships exactly `theme.json` and `theme.css`; there are no executable hooks, Plugin permissions, or safe-mode requirements. See **[THEMES.md](THEMES.md)** for publishing, entry fields, integrity checks, review, and unlisting. The index is intentionally empty until real releases are reviewed.
+
+```bash
+npm run validate:themes
+npm run validate:themes:remote
+```
+
+Standard `npm run validate`, `npm run validate:remote`, and `npm run test:run` (also `npm test`) cover both registries. Their schemas are independent; do not add themes to the executable Plugin index.
+
+## For plugin users
 
 1. Open Phials  
 2. **Settings → Plugins → Community plugins**  
@@ -15,7 +26,7 @@ Canonical **`community-plugins.json`** for [Phials](https://github.com/phoundry/
 
 Community plugins are **trusted JavaScript** running in the app with **permission-gated** Phials APIs—not a full sandbox. See Phials [user plugins documentation](https://github.com/phoundry/phials/blob/main/documentation/user/plugins.md).
 
-## For plugin authors
+## For executable Plugin authors
 
 Authoring starts from the public example repo: **[phoundry/phials-plugin-example](https://github.com/phoundry/phials-plugin-example)** (Svelte 5, Vite, synced SDK types, `npm run validate` on `dist/`).
 

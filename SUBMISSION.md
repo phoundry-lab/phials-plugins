@@ -1,5 +1,7 @@
 # Submitting a plugin to the registry
 
+For standalone, non-executable themes, use **[THEMES.md](THEMES.md)** and `community-themes.json` instead. The Plugin checklist and Plugin listing-state commands below do not apply to themes.
+
 This checklist is what maintainers verify before merging a pull request that adds or updates an entry in [`community-plugins.json`](community-plugins.json).
 
 ## 1. Plugin id and ownership

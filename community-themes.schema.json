@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/EliWimmer/phials-plugins/community-themes.schema.json",
+  "title": "Phials standalone community themes index",
+  "description": "Cross-entry id uniqueness, aggregate asset size <= 4 MiB, and tag/version equality are enforced by scripts/validate-community-themes.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["themes"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "themes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/themeEntry"
+      }
+    }
+  },
+  "$defs": {
+    "themeEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "author", "description", "repo", "mode"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-z](?:[a-z0-9-]*[a-z0-9])?(?:\\.[a-z](?:[a-z0-9-]*[a-z0-9])?)+$(?![\\s\\S])",
+          "not": {
+            "pattern": "^(?:phi|phials|phoundry)\\."
+          }
+        },
+        "name": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "author": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "repo": {
+          "type": "string",
+          "maxLength": 140,
+          "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/(?!\\.{1,2}$)[A-Za-z0-9_.-]{1,100}$(?![\\s\\S])",
+          "not": {
+            "pattern": "\\.[gG][iI][tT]$"
+          },
+          "description": "GitHub owner/repo, without URL or .git suffix."
+        },
+        "mode": {
+          "enum": ["light", "dark"]
+        },
+        "listed": {
+          "type": "boolean",
+          "default": true
+        },
+        "release": {
+          "$ref": "#/$defs/release"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "listed": {
+                "const": false
+              }
+            },
+            "required": ["listed"]
+          },
+          "then": {
+            "not": {
+              "required": ["release"]
+            }
+          },
+          "else": {
+            "required": ["release"]
+          }
+        }
+      ]
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tag", "version", "assets"],
+      "properties": {
+        "tag": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Must equal version or v + version (checked by validator)."
+        },
+        "version": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Stable SemVer; numeric components must fit unsigned 64-bit integers (checked by validator).",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$(?![\\s\\S])"
+        },
+        "assets": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/asset"
+          },
+          "allOf": [
+            {
+              "contains": {
+                "properties": {
+                  "name": {
+                    "const": "theme.json"
+                  }
+                },
+                "required": ["name"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "properties": {
+                  "name": {
+                    "const": "theme.css"
+                  }
+                },
+                "required": ["name"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            }
+          ],
+          "description": "Exactly two unique assets; combined size <= 4194304 bytes (checked by validator)."
+        }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "size", "sha256"],
+      "properties": {
+        "name": {
+          "enum": ["theme.json", "theme.css"]
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4194304
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+        }
+      }
+    }
+  }
+}

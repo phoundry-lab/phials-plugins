@@ -24,6 +24,10 @@ The community registry is a **static JSON index** on GitHub. There is no separat
 - **Unlisting:** Set `listed: false` and omit `release`. This stops new installs and update discovery only; it does not remotely disable, remove, or alter already-installed copies. Restore the same reviewed record after a valid release is available.
 - **Commands:** Use `npm run registry:unlist -- <plugin-id>` and restore from a newly verified starter inventory with `npm run registry:restore -- <plugin-id> --inventory <path> --tag <tag>`.
 
+## Standalone themes
+
+Standalone themes use the separate `community-themes.json` registry and the review/unlisting process in **[THEMES.md](THEMES.md)**. Set `listed: false` and remove `release` to preserve identity while stopping new discovery and updates. Restoration requires a newly verified two-file release. Already-installed themes are not remotely removed. Theme distribution has no executable Plugin hooks or safe-mode gate; Plugin permission/safe-mode advice and Plugin listing-state commands above do not apply to themes.
+
 ## Scope
 
 This policy covers **this registry repository** only. Phials app behavior (safe mode, permissions, install paths) is documented in the main Phials and phials-plugin-example documentation.

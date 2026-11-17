@@ -10,6 +10,14 @@ on:
       - "scripts/listing-state.mjs"
       - "SUBMISSION.md"
       - "POLICY.md"
+      - "community-themes.json"
+      - "community-themes.schema.json"
+      - "scripts/validate-community-themes.mjs"
+      - "scripts/validate-community-themes.test.mjs"
+      - "THEMES.md"
+      - "README.md"
+      - "package.json"
+      - ".github/workflows/validate-index.yml"
   push:
     branches: [master]
     paths:
@@ -20,11 +28,19 @@ on:
       - "scripts/listing-state.mjs"
       - "SUBMISSION.md"
       - "POLICY.md"
+      - "community-themes.json"
+      - "community-themes.schema.json"
+      - "scripts/validate-community-themes.mjs"
+      - "scripts/validate-community-themes.test.mjs"
+      - "THEMES.md"
+      - "README.md"
+      - "package.json"
+      - ".github/workflows/validate-index.yml"
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate community-plugins.json
+      - name: Validate plugin and standalone theme indexes
         run: npm run validate && npm run test:run && npm run validate:remote
