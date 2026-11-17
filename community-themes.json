@@ -1,4 +1,29 @@
 {
   "$schema": "./community-themes.schema.json",
-  "themes": []
+  "themes": [
+    {
+      "id": "phoundry-lab.fern",
+      "name": "Fern",
+      "author": "Eli Wimmer",
+      "description": "A forest-green dark theme with soft mint text and earthy accents.",
+      "repo": "phoundry-lab/phials-theme-fern",
+      "mode": "dark",
+      "release": {
+        "tag": "v1.0.0",
+        "version": "1.0.0",
+        "assets": [
+          {
+            "name": "theme.json",
+            "size": 196,
+            "sha256": "8f01b8dd5a0769f14804f5e44d5a03d65f9cd3a04ecadd5e7fd04dd4262db3af"
+          },
+          {
+            "name": "theme.css",
+            "size": 4344,
+            "sha256": "2472e1acaeee6690bc611091141f3cf0e581649735612d6abd083a0f8dbf2c0f"
+          }
+        ]
+      }
+    }
+  ]
 }
