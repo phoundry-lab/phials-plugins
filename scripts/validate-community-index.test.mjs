@@ -67,6 +67,15 @@ function fixtureFetch({ unavailable = false, mutateMain = false, extraAsset = fa
   };
 }
 
+test("executable Plugin releases reject theme payloads now owned by the theme registry", () => {
+  const withThemes = structuredClone(entry);
+  withThemes.release.assets.push(
+    { name: "theme-night.json", size: 2, sha256: "a".repeat(64) },
+    { name: "theme-night.css", size: 2, sha256: "b".repeat(64) },
+  );
+  assert.match(validateIndexShape({ plugins: [withThemes] }).join("\n"), /unsupported/);
+});
+
 test("temporary unlisting is machine-valid and omits release metadata", () => {
   assert.deepEqual(
     validateIndexShape({ plugins: [{ ...entry, listed: false, release: undefined }] }),

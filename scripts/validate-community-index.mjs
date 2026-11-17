@@ -11,7 +11,6 @@ const REPO = /^[A-Za-z0-9][A-Za-z0-9_.-]*\/[A-Za-z0-9][A-Za-z0-9_.-]*$/;
 const STABLE_SEMVER = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
 const SHA256 = /^[a-f0-9]{64}$/;
 const CORE_ASSETS = new Set(["manifest.json", "main.js", "styles.css"]);
-const THEME_ASSET = /^theme-([a-z0-9][a-z0-9-]*)\.(json|css)$/;
 
 export function checksumCandidate(files) {
   const hash = createHash("sha256");
@@ -100,7 +99,6 @@ export function validateIndexShape(parsed) {
       return;
     }
     const assetNames = new Set();
-    const themePairs = new Map();
     for (const [assetIndex, asset] of release.assets.entries()) {
       const ap = `${p}.release.assets[${assetIndex}]`;
       if (!asset || typeof asset !== "object") {
@@ -119,23 +117,10 @@ export function validateIndexShape(parsed) {
       if (!Number.isSafeInteger(asset.size) || asset.size < 0)
         errors.push(`${ap}.size: invalid`);
       if (!SHA256.test(asset.sha256 ?? "")) errors.push(`${ap}.sha256: invalid`);
-      if (!CORE_ASSETS.has(asset.name)) {
-        const theme = asset.name?.match(THEME_ASSET);
-        if (!theme) errors.push(`${ap}.name: unsupported/noncanonical`);
-        else {
-          const extensions = themePairs.get(theme[1]) ?? new Set();
-          extensions.add(theme[2]);
-          themePairs.set(theme[1], extensions);
-        }
-      }
+      if (!CORE_ASSETS.has(asset.name)) errors.push(`${ap}.name: unsupported/noncanonical`);
     }
     for (const required of ["manifest.json", "main.js"]) {
       if (!assetNames.has(required)) errors.push(`${p}.release.assets: missing ${required}`);
-    }
-    for (const [slug, extensions] of themePairs) {
-      if (!extensions.has("json") || !extensions.has("css")) {
-        errors.push(`${p}.release.assets: incomplete theme pair "${slug}"`);
-      }
     }
   });
   return errors;

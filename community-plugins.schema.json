@@ -83,7 +83,7 @@
       "additionalProperties": false,
       "required": ["name", "size", "sha256"],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
+        "name": { "enum": ["manifest.json", "main.js", "styles.css"] },
         "size": { "type": "integer", "minimum": 0 },
         "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
       }
